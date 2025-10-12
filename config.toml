@@ -1,0 +1,8 @@
+baseURL = "https://your-domain-or-netlify-site.netlify.app/"
+languageCode = "en-us"
+title = "Sleeper Power Rankings"
+theme = "hugo-PaperMod"
+
+[params]
+  # PaperMod options (see PaperMod docs for many options)
+  showReadingTime = false
