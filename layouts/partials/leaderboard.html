@@ -1,0 +1,23 @@
+{{ $data := site.Data.leaderboard }}
+{{ if $data }}
+  <section id="power-rankings">
+    <h2>Power Rankings (All Play Win %)</h2>
+    <table>
+      <thead>
+        <tr><th>Rank</th><th>Team</th><th>All Play %</th><th>All Play Wins</th></tr>
+      </thead>
+      <tbody>
+      {{ range $i, $entry := $data.leaderboard }}
+        <tr>
+          <td>{{ add $i 1 }}</td>
+          <td>{{ $entry.team }}</td>
+          <td>{{ printf "%.3f" $entry.all_play_pct }}</td>
+          <td>{{ $entry.all_play_wins }}</td>
+        </tr>
+      {{ end }}
+      </tbody>
+    </table>
+  </section>
+{{ else }}
+  <p>No leaderboard data found.</p>
+{{ end }}
