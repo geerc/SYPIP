@@ -2,4 +2,6 @@
 title: "Home"
 ---
 
-{{< partial "leaderboard.html" >}}
+Welcome to the Sleeper Power Rankings site.
+
+{{< leaderboard >}}
