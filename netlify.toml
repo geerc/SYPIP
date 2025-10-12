@@ -1,0 +1,7 @@
+[build]
+  command = "python3 fetch_and_write.py && hugo --minify"
+  publish = "public"
+
+[build.environment]
+  HUGO_VERSION = "0.116.0"
+  # You will set LEAGUE_ID and WEEKS in the Netlify UI (site settings -> Build & deploy -> Environment)
