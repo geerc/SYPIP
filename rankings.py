@@ -2,7 +2,7 @@ import requests
 from tabulate import tabulate
 # === CONFIGURATION ===
 LEAGUE_ID = "1255668983974072320"  # Replace with your Sleeper league ID
-WEEKS = 5  # Set to your league's regular season length
+WEEKS = 6  # Set to your league's regular season length
 
 
 # === STEP 1: Fetch league data ===
