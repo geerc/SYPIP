@@ -3,5 +3,5 @@
   publish = "public"
 
 [build.environment]
-  HUGO_VERSION = "0.116.0"
+  HUGO_VERSION = "0.150.1"
   # You will set LEAGUE_ID and WEEKS in the Netlify UI (site settings -> Build & deploy -> Environment)
