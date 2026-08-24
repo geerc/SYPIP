@@ -43,13 +43,16 @@ def render_preseason(*, output: Path, title: str, league_name: str, season: str)
     generated = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
     html = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Sleeper fantasy football power rankings for {escape(league_name)}">
-<title>{escape(title)}</title><link rel="stylesheet" href="assets/site.css"></head>
-<body><header class="hero"><div class="wrap"><p class="eyebrow">{escape(season)} · Preseason</p><h1>{escape(title)}</h1><p>{escape(league_name)} · The next argument starts after Week 1.</p></div></header>
-<main class="wrap"><section><p class="eyebrow">Coming soon</p><h2>The league is waiting for kickoff.</h2><p class="prose">Rosters and completed matchups are not available yet. After the first scored week, this page will automatically publish power rankings, weekly movement, playoff probabilities, projected standings, the luck index, and the weekly recap.</p></section>
-<footer>Last checked {generated}. Data updates when the scheduled GitHub workflow runs.</footer></main></body></html>'''
+<meta name="description" content="Something is coming.">
+<title>Stand by.</title><link rel="stylesheet" href="assets/site.css"></head>
+<body class="teaser"><main class="teaser-inner"><div class="signal" aria-hidden="true"></div><p class="eyebrow">Transmission pending</p><h1>Something is coming.</h1><p class="teaser-copy">The league will know soon enough.</p><p class="timestamp">Signal checked {generated}</p></main></body></html>'''
     (output / "index.html").write_text(html, encoding="utf-8")
     assets = output / "assets"
     assets.mkdir(exist_ok=True)
     (assets / "site.css").write_text(CSS, encoding="utf-8")
     return output / "index.html"
+
+
+CSS += """
+.teaser{min-height:100vh;background:#080b09;color:#e8eee9;display:grid;place-items:center;overflow:hidden}.teaser:before{content:"";position:fixed;inset:-30%;background:radial-gradient(circle,#1d694933 0,transparent 45%);animation:pulse 7s ease-in-out infinite}.teaser-inner{position:relative;width:min(720px,calc(100% - 40px));padding:72px 20px;text-align:center}.teaser h1{font:800 clamp(3.4rem,12vw,8rem)/.86 Georgia,serif;letter-spacing:-.055em;margin:.2em 0}.teaser-copy{color:#91a097;font-size:clamp(1rem,2.5vw,1.3rem);letter-spacing:.08em}.signal{width:10px;height:10px;margin:0 auto 40px;border-radius:50%;background:#ee5b2b;box-shadow:0 0 30px #ee5b2b;animation:blink 2.4s ease-in-out infinite}.timestamp{margin-top:72px;color:#3d4942;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}@keyframes pulse{50%{transform:scale(1.18);opacity:.55}}@keyframes blink{50%{opacity:.18;box-shadow:0 0 6px #ee5b2b}}
+"""

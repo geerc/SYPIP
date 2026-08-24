@@ -13,4 +13,6 @@ def test_team_name_falls_back_to_display_name():
 def test_preseason_page_can_be_deployed(tmp_path):
     output = render_preseason(output=tmp_path, title="SYPIP Power Rankings", league_name="SYPIP", season="2026")
     assert output.exists()
-    assert "waiting for kickoff" in output.read_text(encoding="utf-8")
+    content = output.read_text(encoding="utf-8")
+    assert "Something is coming" in content
+    assert "Power Rankings" not in content

@@ -54,7 +54,8 @@ def run(args: argparse.Namespace) -> Path:
     regular_weeks = int(data.league["settings"].get("playoff_week_start", 15)) - 1
     if 5 <= week < regular_weeks:
         playoffs = playoff_probabilities(data, rankings, week, int(config.get("simulations", 100000)), config.get("random_seed"))
-    summary = None if args.skip_ai else generate_summary(data, week, os.getenv("OPENAI_MODEL", "gpt-5-mini"))
+    ai_enabled = bool(config.get("ai_recap", False)) and not args.skip_ai
+    summary = generate_summary(data, week, os.getenv("OPENAI_MODEL", "gpt-5-mini")) if ai_enabled else None
     return render_site(output=args.output, title=config.get("title", f'{data.league["name"]} Power Rankings'), league_name=data.league["name"], season=data.league["season"], week=week, rankings=rankings, summary=summary, playoffs=playoffs, standings=standings, luck=luck)
 
 
