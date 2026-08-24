@@ -29,6 +29,8 @@ The generated site is written to `dist/`. During the preseason, pass the previou
 
 Create one Netlify project per league and connect it to that league's repository. Netlify publishes `dist/`. The weekly GitHub workflow is scheduled for Tuesday morning during the NFL season and can also be run manually.
 
+The checked-in `netlify.toml` installs the project and its dependencies before generating the site; no manual dependency settings are required in Netlify.
+
 Add `OPENAI_API_KEY` as a GitHub Actions secret to enable the recap. Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` repository secrets to let the scheduled workflow deploy directly to that league's Netlify project. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
 
 For a future league, copy `leagues/sypip.json`, change the league ID/title, and point that league's repository or deployment configuration at the new file. Keeping the engine configuration-driven avoids coupling the calculations to SYPIP.
