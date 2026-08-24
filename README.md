@@ -1,0 +1,40 @@
+# Sleeper Power Rankings
+
+A standalone static-site generator for weekly Sleeper fantasy-football reports. It recreates the existing ESPN report with:
+
+- ESPN-style two-step-dominance performance rankings
+- KeepTradeCut roster-value rankings and a season-adjusted composite power score
+- weekly matchup recap (optional OpenAI API key)
+- projected standings and Monte Carlo playoff probabilities
+- a projection-independent luck index
+
+The configured league is **SYPIP** (`1389341850288009216`). It is public and requires no Sleeper credentials.
+
+## Local setup
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/pip install -e '.[dev]'
+.venv/bin/python -m pytest
+.venv/bin/python -m sleeper_rankings.cli --skip-ai
+```
+
+The generated site is written to `dist/`. During the preseason, pass the previous league and a completed week to validate historical data:
+
+```bash
+.venv/bin/python -m sleeper_rankings.cli --league-id 1255668983974072320 --week 10 --skip-ai
+```
+
+## Deployment
+
+Create one Netlify project per league and connect it to that league's repository. Netlify publishes `dist/`. The weekly GitHub workflow is scheduled for Tuesday morning during the NFL season and can also be run manually.
+
+Add `OPENAI_API_KEY` as a GitHub Actions secret to enable the recap. Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` repository secrets to let the scheduled workflow deploy directly to that league's Netlify project. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
+
+For a future league, copy `leagues/sypip.json`, change the league ID/title, and point that league's repository or deployment configuration at the new file. Keeping the engine configuration-driven avoids coupling the calculations to SYPIP.
+
+## Sleeper differences
+
+Sleeper's documented API does not provide player projections. The recap uses actual player results, and the luck index uses opponent draw (65%), performance against the team's own scoring history (25%), and close-game margin (10%). It does not claim projection-based insights.
+
+KeepTradeCut is scraped once per generation. If its markup changes, generation fails instead of silently publishing zero roster values.
