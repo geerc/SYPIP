@@ -37,3 +37,19 @@ CSS = """
 :root{--ink:#17231d;--muted:#617067;--paper:#f5f1e7;--card:#fffdf7;--line:#d8d3c6;--accent:#ee5b2b;--green:#1d6949}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{width:min(1120px,calc(100% - 32px));margin:auto}.hero{padding:72px 0 64px;background:var(--ink);color:#fff;border-bottom:8px solid var(--accent)}.hero h1{font:800 clamp(2.8rem,8vw,6.5rem)/.92 Georgia,serif;max-width:900px;margin:.12em 0}.hero p:last-child{color:#cad3cd}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-weight:800;font-size:.78rem;color:var(--accent)}main{padding:36px 0 72px}section{margin:0 0 48px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,4vw,38px);box-shadow:0 14px 40px #17231d0d}h2{font:800 clamp(1.8rem,5vw,3rem)/1 Georgia,serif;margin:.2em 0 .7em}.section-title{display:flex;align-items:end;justify-content:space-between;gap:24px}.note{color:var(--muted);font-size:.92rem}.rankings-table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}.rankings-table th{background:var(--ink);color:#fff;text-align:left;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}.rankings-table th,.rankings-table td{padding:13px 15px;border-bottom:1px solid var(--line);white-space:nowrap}.rankings-table tr:nth-child(even) td{background:#f5f1e780}.rankings-table td:first-child{font-weight:900;color:var(--accent)}.prose{max-width:800px;color:#324238}footer{color:var(--muted);font-size:.82rem;text-align:center}@media(max-width:650px){.hero{padding:52px 0 42px}.section-title{display:block}section{border-radius:12px;padding:18px}.rankings-table th,.rankings-table td{padding:10px 11px;font-size:.86rem}}
 """
 
+
+def render_preseason(*, output: Path, title: str, league_name: str, season: str) -> Path:
+    output.mkdir(parents=True, exist_ok=True)
+    generated = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
+    html = f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Sleeper fantasy football power rankings for {escape(league_name)}">
+<title>{escape(title)}</title><link rel="stylesheet" href="assets/site.css"></head>
+<body><header class="hero"><div class="wrap"><p class="eyebrow">{escape(season)} · Preseason</p><h1>{escape(title)}</h1><p>{escape(league_name)} · The next argument starts after Week 1.</p></div></header>
+<main class="wrap"><section><p class="eyebrow">Coming soon</p><h2>The league is waiting for kickoff.</h2><p class="prose">Rosters and completed matchups are not available yet. After the first scored week, this page will automatically publish power rankings, weekly movement, playoff probabilities, projected standings, the luck index, and the weekly recap.</p></section>
+<footer>Last checked {generated}. Data updates when the scheduled GitHub workflow runs.</footer></main></body></html>'''
+    (output / "index.html").write_text(html, encoding="utf-8")
+    assets = output / "assets"
+    assets.mkdir(exist_ok=True)
+    (assets / "site.css").write_text(CSS, encoding="utf-8")
+    return output / "index.html"

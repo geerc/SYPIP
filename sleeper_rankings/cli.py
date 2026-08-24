@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from .api import SleeperClient
 from .loader import completed_week, load_league
 from .rankings import add_weekly_change, luck_index, playoff_probabilities, power_rankings, projected_standings
-from .render import render_site
+from .render import render_preseason, render_site
 from .summary import generate_summary
 from .values import fetch_values
 
@@ -35,7 +35,12 @@ def run(args: argparse.Namespace) -> Path:
     league = client.league(str(league_id))
     week = args.week if args.week is not None else completed_week(league)
     if week < 1:
-        raise ValueError("No completed week is available yet; use --week after games have scored")
+        return render_preseason(
+            output=args.output,
+            title=config.get("title", f'{league["name"]} Power Rankings'),
+            league_name=league["name"],
+            season=league["season"],
+        )
     data = load_league(client, str(league_id), through_week=week)
     if not any(team.players for team in data.teams):
         raise ValueError("The league has no populated rosters yet")
