@@ -1,6 +1,6 @@
 # Sleeper Power Rankings
 
-A standalone static-site generator for weekly Sleeper fantasy-football reports. It recreates the existing ESPN report with:
+The SYPIP-specific website and deployment configuration for weekly Sleeper fantasy-football reports. Ranking generation is provided by the shared [fantasy-football-reports](https://github.com/geerc/fantasy-football-reports) package.
 
 - ESPN-style two-step-dominance performance rankings
 - KeepTradeCut roster-value rankings and a season-adjusted composite power score
@@ -33,7 +33,7 @@ The checked-in `netlify.toml` installs the project and its dependencies before g
 
 Add `OPENAI_API_KEY` as a GitHub Actions secret to enable the recap. Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` repository secrets to let the scheduled workflow deploy directly to that league's Netlify project. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
 
-For a future league, copy `leagues/sypip.json`, change the league ID/title, and point that league's repository or deployment configuration at the new file. Keeping the engine configuration-driven avoids coupling the calculations to SYPIP.
+This repository deploys only SYPIP. Future leagues should use separate website repositories that depend on the same shared report package.
 
 ## Sleeper differences
 

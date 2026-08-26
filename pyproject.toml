@@ -3,15 +3,7 @@ name = "sleeper-power-rankings"
 version = "0.1.0"
 description = "Generate a public weekly Sleeper fantasy-football power rankings site."
 requires-python = ">=3.11"
-dependencies = [
-  "beautifulsoup4>=4.12,<5",
-  "numpy>=1.26,<3",
-  "openai>=1.40,<3",
-  "pandas>=2.2,<3",
-  "python-dotenv>=1,<2",
-  "fuzzywuzzy>=0.18,<1",
-  "requests>=2.31,<3",
-]
+dependencies = ["fantasy-football-reports @ git+https://github.com/geerc/fantasy-football-reports.git@b9bfa8e"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<9"]
@@ -23,8 +15,8 @@ sleeper-rankings = "sleeper_rankings.cli:main"
 requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-include = ["sleeper_rankings*"]
+[tool.setuptools]
+packages = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
