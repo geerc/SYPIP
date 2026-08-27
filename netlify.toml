@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "pip install . && python -m sleeper_rankings.cli"
+  command = "pip install --upgrade --upgrade-strategy eager . && python -m sleeper_rankings.cli --archive-only"
 
 [build.environment]
   PYTHON_VERSION = "3.12"

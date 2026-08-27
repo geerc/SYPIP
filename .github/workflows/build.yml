@@ -1,48 +1,64 @@
-name: Build rankings
-
+name: Build report draft
 on:
   workflow_dispatch:
     inputs:
       week:
-        description: "Completed week override (optional)"
+        description: Completed week override (optional)
         required: false
   schedule:
     - cron: "30 14 * 9-12 2"
-
 permissions:
-  contents: read
-
+  contents: write
+  pull-requests: write
+concurrency:
+  group: report-draft
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HAS_NETLIFY: ${{ secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != '' }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-      - run: pip install .
-      - name: Generate site (latest completed week)
-        if: ${{ !inputs.week }}
+      - run: pip install --upgrade --upgrade-strategy eager '.[dev]'
+      - run: python -m pytest -q
+      - name: Generate new entry
         env:
+          REPORT_WEEK: ${{ inputs.week }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: gpt-5-mini
-        run: python -m sleeper_rankings.cli
-      - name: Generate site (week override)
-        if: ${{ inputs.week }}
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: gpt-5-mini
-        run: python -m sleeper_rankings.cli --week "${{ inputs.week }}"
+        run: |
+          args=()
+          if [ -n "$REPORT_WEEK" ]; then args+=(--week "$REPORT_WEEK"); fi
+          python -m sleeper_rankings.cli "${args[@]}"
       - uses: actions/upload-artifact@v4
         with:
-          name: site
-          path: dist
-      - name: Deploy to Netlify
-        if: ${{ env.HAS_NETLIFY == 'true' }}
+          name: report-draft
+          path: |
+            dist
+            content/reports
+      - name: Deploy draft only
+        if: ${{ env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != '' }}
+        run: npx --yes netlify-cli deploy --no-build --dir=dist
+      - name: Save review branch and open pull request
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: npx --yes netlify-cli deploy --prod --dir=dist
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -d content/reports ]; then exit 0; fi
+          git add content/reports
+          if git diff --cached --quiet; then exit 0; fi
+          branch="reports/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Add weekly report for review"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Review weekly report" --body "Review the Netlify draft URL in the workflow logs. Merge this PR only when ready to publish. Do not promote the draft directly: merging also preserves content and ranking history for future weeks."
+      - name: Missing deployment credentials
+        if: ${{ env.NETLIFY_AUTH_TOKEN == '' || env.NETLIFY_SITE_ID == '' }}
+        run: echo "::warning::Netlify draft skipped. Configure NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID; the downloadable artifact is still available."

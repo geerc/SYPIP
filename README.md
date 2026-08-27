@@ -1,4 +1,20 @@
-# Sleeper Power Rankings
+# SYPIP
+
+## Review-first weekly workflow
+
+The local website directory is `SYPIP`; the GitHub repository URL remains unchanged. The engine lives in `fantasy-football-reports`. The dependency follows its `main` branch, so each build installs the latest engine automatically. Engine regressions can fail a draft build; historical reports are saved output and are not recalculated.
+
+Tuesday's **Build report draft** workflow generates a new entry under `content/reports/<league-id>/<season>/week-NN/`, saves rankings and KTC values alongside its HTML, uploads an artifact, deploys a Netlify draft URL, and opens a review pull request. No automated report is deployed with `--prod`.
+
+Review the draft URL in the Actions log, then **merge the report PR to publish**. Netlify's production branch must remain `main`. Do not promote a Netlify draft directly: that would skip saving its history on main. Review/merge earlier weeks before generating the next one to include their snapshots. Enable **Allow GitHub Actions to create and approve pull requests** in repository Actions settings if PR creation is blocked. The workflow never approves or merges its own PRs.
+
+Configure `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` as Actions secrets for draft deployment. Without them, the artifact and review PR remain available but Netlify upload is skipped. Draft URLs are previews, not access-controlled private pages.
+
+Netlify runs `python -m sleeper_rankings.cli --archive-only`: it publishes saved entries only and never generates an unreviewed report. An empty archive shows the preseason teaser. Each week has its own URL and the homepage lists all archived weeks. Existing weeks cannot be regenerated in place accidentally.
+
+Weekly movement compares the current ranking with the previous week's stored ranking by roster ID (old rank minus new rank). Missing history is labeled explicitly; current KTC values are never used to reconstruct last week's rank. AI recaps remain disabled in `leagues/sypip.json`.
+
+For local generation, run the normal command below. Use `--archive-only` to render saved reports without API calls. Generated entries are not published merely by running locally; review the content changes before merging them into main.
 
 The SYPIP-specific website and deployment configuration for weekly Sleeper fantasy-football reports. Ranking generation is provided by the shared [fantasy-football-reports](https://github.com/geerc/fantasy-football-reports) package.
 
@@ -31,7 +47,7 @@ Create one Netlify project per league and connect it to that league's repository
 
 The checked-in `netlify.toml` installs the project and its dependencies before generating the site; no manual dependency settings are required in Netlify.
 
-Add `OPENAI_API_KEY` as a GitHub Actions secret to enable the recap. Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` repository secrets to let the scheduled workflow deploy directly to that league's Netlify project. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
+An AI key alone does not enable recaps: SYPIP also requires an explicit change to `ai_recap` in its configuration. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
 
 This repository deploys only SYPIP. Future leagues should use separate website repositories that depend on the same shared report package.
 

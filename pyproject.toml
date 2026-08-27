@@ -1,9 +1,9 @@
 [project]
-name = "sleeper-power-rankings"
+name = "sypip-site"
 version = "0.1.0"
 description = "Generate a public weekly Sleeper fantasy-football power rankings site."
 requires-python = ">=3.11"
-dependencies = ["fantasy-football-reports @ git+https://github.com/geerc/fantasy-football-reports.git@b9bfa8e"]
+dependencies = ["fantasy-football-reports @ git+https://github.com/geerc/fantasy-football-reports.git@main"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<9"]
