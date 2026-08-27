@@ -16,7 +16,7 @@ Weekly movement compares the current ranking with the previous week's stored ran
 
 For local generation, run the normal command below. Use `--archive-only` to render saved reports without API calls. Generated entries are not published merely by running locally; review the content changes before merging them into main.
 
-For a correction, manually run the workflow with an explicit week and the overwrite checkbox enabled, or use `python -m sleeper_rankings.cli --week N --overwrite` locally. The corrected entry still needs review and merging. Scheduled runs cannot overwrite entries. Corrections use newly fetched league data and current KTC values, not a historical replay. Later weeks' saved movement is not automatically revised when an earlier week is corrected.
+For a correction, manually run the workflow with an explicit week and the overwrite checkbox enabled, or use `python -m sleeper_rankings.cli --week N --overwrite` locally. The corrected entry still needs review and merging. Scheduled runs cannot overwrite entries. Corrections reuse that week's saved `values.csv`; missing snapshots stop the correction instead of substituting current KTC values. League data is fetched again, so this is not a full historical replay. Later weeks' saved movement is not automatically revised when an earlier week is corrected.
 
 The SYPIP-specific website and deployment configuration for weekly Sleeper fantasy-football reports. Ranking generation is provided by the shared [fantasy-football-reports](https://github.com/geerc/fantasy-football-reports) package.
 
