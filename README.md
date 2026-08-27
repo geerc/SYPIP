@@ -2,7 +2,7 @@
 
 ## Review-first weekly workflow
 
-The local website directory is `SYPIP`; the GitHub repository URL remains unchanged. The engine lives in `fantasy-football-reports`. The dependency follows its `main` branch, so each build installs the latest engine automatically. Engine regressions can fail a draft build; historical reports are saved output and are not recalculated.
+The local website directory is `SYPIP`; the GitHub repository URL remains unchanged. The engine lives in `fantasy-football-reports`. The dependency follows its `master` branch, so each build installs the latest engine automatically. Engine regressions can fail a draft build; historical reports are saved output and are not recalculated.
 
 Tuesday's **Build report draft** workflow generates a new entry under `content/reports/<league-id>/<season>/week-NN/`, saves rankings and KTC values alongside its HTML, uploads an artifact, deploys a Netlify draft URL, and opens a review pull request. No automated report is deployed with `--prod`.
 
