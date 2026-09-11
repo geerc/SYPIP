@@ -12,7 +12,7 @@ Configure `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` as Actions secrets for draf
 
 Netlify runs `python -m sleeper_rankings.cli --archive-only`: it publishes saved entries only and never generates an unreviewed report. An empty archive shows the preseason teaser. Each week has its own URL and the homepage lists all archived weeks. Existing weeks cannot be regenerated in place accidentally.
 
-Weekly movement compares the current ranking with the previous week's stored ranking by roster ID (old rank minus new rank). Missing history is labeled explicitly; current KTC values are never used to reconstruct last week's rank. AI recaps remain disabled in `leagues/sypip.json`.
+Weekly movement compares the current ranking with the previous week's stored ranking by roster ID (old rank minus new rank). Missing history is labeled explicitly; current KTC values are never used to reconstruct last week's rank. AI recaps are enabled in `leagues/sypip.json` and use the `OPENAI_API_KEY` Actions secret.
 
 For local generation, run the normal command below. Use `--archive-only` to render saved reports without API calls. Generated entries are not published merely by running locally; review the content changes before merging them into main.
 
@@ -49,7 +49,7 @@ Create one Netlify project per league and connect it to that league's repository
 
 The checked-in `netlify.toml` installs the project and its dependencies before generating the site; no manual dependency settings are required in Netlify.
 
-An AI key alone does not enable recaps: SYPIP also requires an explicit change to `ai_recap` in its configuration. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
+SYPIP's AI recap is enabled and requires the `OPENAI_API_KEY` Actions secret. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
 
 This repository deploys only SYPIP. Future leagues should use separate website repositories that depend on the same shared report package.
 
