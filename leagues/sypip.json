@@ -2,7 +2,7 @@
   "slug": "sypip",
   "league_id": "1389341850288009216",
   "title": "SYPIP Power Rankings",
-  "ai_recap": false,
+  "ai_recap": true,
   "dynasty_weight": 0.0,
   "simulations": 100000,
   "random_seed": 2026

@@ -49,7 +49,7 @@ Create one Netlify project per league and connect it to that league's repository
 
 The checked-in `netlify.toml` installs the project and its dependencies before generating the site; no manual dependency settings are required in Netlify.
 
-An AI key alone does not enable recaps: SYPIP also requires an explicit change to `ai_recap` in its configuration. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
+SYPIP's AI recap is enabled and requires the `OPENAI_API_KEY` Actions secret. No Sleeper secret is required. The site and generation run in hosted services; no home server or inbound Pi access is involved.
 
 This repository deploys only SYPIP. Future leagues should use separate website repositories that depend on the same shared report package.
 
