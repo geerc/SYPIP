@@ -10,7 +10,7 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "30 14 * 9-12 2"
+    - cron: "0 10 * 9-12 2"
 permissions:
   contents: write
   pull-requests: write
