@@ -36,7 +36,7 @@ jobs:
         env:
           REPORT_WEEK: ${{ inputs.week }}
           OVERWRITE: ${{ inputs.overwrite }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.OPEN_AI_KEY }}
         run: |
           args=()
           if [ -n "$REPORT_WEEK" ]; then args+=(--week "$REPORT_WEEK"); fi
