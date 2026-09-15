@@ -12,7 +12,9 @@ Configure `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` as Actions secrets for draf
 
 Netlify runs `python -m sleeper_rankings.cli --archive-only`: it publishes saved entries only and never generates an unreviewed report. An empty archive shows the preseason teaser. Each week has its own URL and the homepage lists all archived weeks. Existing weeks cannot be regenerated in place accidentally.
 
-Week 1 movement compares against the same league and season's saved post-draft ranking snapshot. Later weekly movement compares with the previous week's stored ranking by roster ID (old rank minus new rank). Missing history is labeled explicitly; current KTC values are never used to reconstruct an earlier rank. AI recaps remain disabled in `leagues/sypip.json`.
+Week 1 movement compares against the same league and season's saved post-draft ranking snapshot. Later weekly movement compares with the previous week's stored ranking by roster ID (old rank minus new rank). Missing history is labeled explicitly; current KTC values are never used to reconstruct an earlier rank. AI recaps are enabled in `leagues/sypip.json` and require the `OPENAI_API_KEY` repository secret.
+
+To use a report header image, add a JPEG at `assets/header.jpg`. Weekly generation copies it into the saved report and applies a dark overlay so the title remains readable.
 
 For local generation, run the normal command below. Use `--archive-only` to render saved reports without API calls. Generated entries are not published merely by running locally; review the content changes before merging them into main.
 
