@@ -19,6 +19,28 @@ def test_winner_has_higher_performance_score():
     assert performance_score(data, data.teams[0], 1) > performance_score(data, data.teams[1], 1)
 
 
+def test_installed_engine_ignores_head_to_head_results():
+    """Gate report generation against accidentally pinning the retired engine."""
+    teams = [
+        Team(1, "a", "Alpha", "A", [], scores=[120], opponents=[2]),
+        Team(2, "b", "Beta", "B", [], scores=[100], opponents=[1]),
+        Team(3, "c", "Gamma", "C", [], scores=[140], opponents=[4]),
+        Team(4, "d", "Delta", "D", [], scores=[80], opponents=[3]),
+    ]
+    data = LeagueData({"settings": {}}, teams, {}, {})
+    before = [performance_score(data, team, 1) for team in teams]
+    # Keep every score fixed, but change Alpha from a winner to a loser.
+    for team, opponent in zip(teams, [3, 4, 1, 2]):
+        team.opponents = [opponent]
+        team.wins = 99
+        team.losses = 99
+    after = [performance_score(data, team, 1) for team in teams]
+    assert after == before, (
+        "Retired head-to-head rankings engine detected. Publish the All-Play "
+        "engine and update the pinned dependency before generating reports."
+    )
+
+
 def test_power_rankings_match_sleeper_ids_to_values():
     data = fixture_data()
     values = pd.DataFrame([
