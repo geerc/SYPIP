@@ -2,7 +2,7 @@
 
 ## Review-first weekly workflow
 
-The local website directory is `SYPIP`; the GitHub repository URL remains unchanged. The engine lives in `fantasy-football-reports`. The dependency is pinned to a specific engine commit in `pyproject.toml`; local engine edits and newer upstream commits are not installed automatically. Publish an engine change and explicitly update that pin before expecting scheduled builds to use it. Engine regressions can fail a draft build; historical reports are saved output and are not recalculated.
+The local website directory is `SYPIP`; the GitHub repository URL remains unchanged. The engine lives in `fantasy-football-reports`. The dependency follows the engine’s `master` branch in `pyproject.toml`. Each fresh scheduled build installs the latest published engine; local edits must be committed and pushed to `master` before builds can use them. Engine regressions can fail a draft build; historical reports are saved output and are not recalculated.
 
 Tuesday's **Build report draft** workflow generates a new entry under `content/reports/<league-id>/<season>/week-NN/`, saves rankings and KTC values alongside its HTML, uploads an artifact, deploys a Netlify draft URL, and opens a review pull request. No automated report is deployed with `--prod`.
 
@@ -65,4 +65,4 @@ KeepTradeCut is scraped once per generation. If its markup changes, generation f
 
 The Week 5 preview (PR #13) was generated with engine commit `c57dab44cdee641d317d2290966b0a171e719456`, which still used head-to-head wins and matchup margins. The All-Play replacement existed only as local, uncommitted engine changes. The unused `fallback/` engine was removed from this project; its history remains in Git, and a local backup is stored at `../repository-archive/sypip-retired-engine-2026-10-14.tar.gz`. Do not restore it as an executable fallback.
 
-The site test `test_installed_engine_ignores_head_to_head_results` now rejects engines whose performance scores depend on the matchup schedule or head-to-head record. The draft workflow runs this check before report generation. Until the All-Play engine is published and the dependency pin updated, that check is expected to fail against the old pinned engine. Existing saved reports are historical output: changing the engine does not recalculate them. Week 5 needs explicit regeneration using its saved KTC snapshot after the engine update.
+The site test `test_installed_engine_ignores_head_to_head_results` now rejects engines whose performance scores depend on the matchup schedule or head-to-head record. The draft workflow runs this check before report generation. This check fails if an old head-to-head engine is installed, even if the dependency configuration is changed accidentally. Existing saved reports are historical output: changing the engine does not recalculate them. Week 5 needs explicit regeneration using its saved KTC snapshot after the engine update.
